@@ -6,7 +6,7 @@
 
 感谢 Godtokoo666 https://github.com/Godtokoo666/badge-for-hydrooj
 
-感谢 bowen404 https://www.cnblogs.com/bowen404/p/17883437.html
+感谢 bowen404 https://github.com/15921483570/hydrooj-cancelavatar
 
 感谢 Hongshi0622 https://github.com/Hongshi0622/Hydro-Bulk-Message
 
