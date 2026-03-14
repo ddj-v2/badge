@@ -1,0 +1,66 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="medium-12 columns">
+    <div class="section">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('paste_manage')}}</h1>
+        <div class="section__tools">
+            {% if handler.user.hasPriv(PRIV.PRIV_ALL) %}
+              <a class="rounded button" href="{{ url('paste_manage',query={uid:0}) }}">{{ _('管理所有剪贴板') }}</a>
+            {% endif %}
+            <a class="primary rounded button" href="{{ url('paste_create') }}">{{ _('paste_create') }}</a>
+        </div>
+      </div>
+      <div class="section__body">
+        {% if not pastes.length %}
+          {{ nothing.render('你还没有剪贴板。') }}
+        {% else %}
+          <div class="row" style="padding-bottom: 24px;user-select:none;">
+            <table class="data-table">
+              <colgroup>
+                <col class="col--time" style="width: 12rem">
+                <col class="col--title">
+                <col class="col--isprivate" style="width: 4rem">
+                <col class="col--owner" style="width: 12rem">
+                <col class="col--operation" style="width: 12rem">
+              </colgroup>
+              <thead>
+                <tr>
+                <th>{{ _('最后更新时间') }}</th>
+                <th>{{ _('Title') }}</th>
+                <th>{{ _('状态') }}</th>
+                <th>{{ _('作者') }}</th>
+                <th>{{ _('Action') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for pdoc in pastes -%}
+                  <tr>
+                    <td>{{ datetimeSpan(pdoc.updateAt) | safe }}</td>
+                    <td><a href="{{ url('paste_detail', id=pdoc._id) }}" class="typo-a">{{ pdoc.title }}</a></td>
+                    <td>
+                        {% if pdoc.isprivate %}
+                          {{ _("私密") }}
+                        {% else %}
+                          {{ _("Public") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url('paste_manage',query={uid:pdoc.owner}) }}">
+                            {{ user.render_inline(udict[pdoc.owner],avatar=false,badge=false,inline=false) }}
+                        </a>
+                    </td>
+                    <td><a href="{{ url('paste_edit', id=pdoc._id) }}" class="typo-a contest-tag">{{ _('Edit') }}</a></td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+            {{ paginator.render(page, upcount,add_qs=('uid=' + uid)) }}	
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
