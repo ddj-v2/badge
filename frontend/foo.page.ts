@@ -55,7 +55,7 @@ addPage(new NamedPage('badge_edit', () => {
 
   $(document).on('click', '[name="operation"][value="delete"]', async (ev) => {
     ev.preventDefault();
-    const message = '确认删除此徽章吗？删除后将无法恢复。';
+    const message = '確認刪除此徽章嗎？刪除後將無法復原。';
     const action = await new ConfirmDialog({
         $body: tpl`
             <div class="typo">

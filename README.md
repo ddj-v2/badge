@@ -1,52 +1,52 @@
 ## 自用hydro-plugins
 
-本插件使用了以下开源项目的部分或全部内容，感谢这些项目的开发者提供的大力支持。
+本外掛使用了以下開源專案的部分或全部內容，感謝這些專案的開發者提供的大力支持。
 
-感谢 33DAI https://github.com/open33oj/hydro-plugins
+感謝 33DAI https://github.com/open33oj/hydro-plugins
 
-感谢 Godtokoo666 https://github.com/Godtokoo666/badge-for-hydrooj
+感謝 Godtokoo666 https://github.com/Godtokoo666/badge-for-hydrooj
 
-感谢 bowen404 https://github.com/15921483570/hydrooj-cancelavatar
+感謝 bowen404 https://github.com/15921483570/hydrooj-cancelavatar
 
-感谢 Hongshi0622 https://github.com/Hongshi0622/Hydro-Bulk-Message
+感謝 Hongshi0622 https://github.com/Hongshi0622/Hydro-Bulk-Message
 
-### 当前支持的版本 Hydro v5。不兼容 Hydro v4。
+### 目前支持的版本 Hydro v5。不相容 Hydro v4。
 
-部分功能截图预览
+部分功能截圖預覽
 
-![用户管理](images/1.png)
+![使用者管理](images/1.png)
 
-![资料编辑](images/2.png)
+![資料編輯](images/2.png)
 
-## 功能简介
+## 功能簡介
 
 ### 徽章
 
-1.管理员可发放徽章，一个徽章可以发放给多个用户，一个用户可拥有多个徽章，但每次只能展示一个徽章，用户可选择启用或停用徽章。by Godtokoo666
+1.管理員可發放徽章，一個徽章可以發放給多個使用者，一個使用者可擁有多個徽章，但每次只能展示一個徽章，使用者可選擇啟用或停用徽章。by Godtokoo666
 
-2.用户profile下拉栏「我的徽章」。by Godtokoo666
+2.使用者profile下拉欄「我的徽章」。by Godtokoo666
 
-3.用户资料页面展示获得的徽章。by cqzym1985
+3.使用者資料頁面展示獲得的徽章。by cqzym1985
 
-### 硬币
+### 硬幣
 
-1.管理员可发放硬币、查看发放记录。by 33DAI
+1.管理員可發放硬幣、查看發放記錄。by 33DAI
 
-2.管理员可批量发放硬币。by cqzym1985
+2.管理員可批量發放硬幣。by cqzym1985
 
-3.兑换商城，管理员可添加、管理商品。by cqzym1985
+3.兌換商城，管理員可添加、管理商品。by cqzym1985
 
-4.用户可兑换商品。by cqzym1985
+4.使用者可兌換商品。by cqzym1985
 
-5.用户间可相互赠送硬币。by cqzym1985
+5.使用者間可相互贈送硬幣。by cqzym1985
 
-6.自动发放硬币。在 管理域「硬币设置」里开启功能。by cqzym1985
+6.自動發放硬幣。在 管理域「硬幣設定」裡開啟功能。by cqzym1985
 
-7.使用硬币可修改用户名，首次修改免费。在 控制面板「系统设置」里设置修改用户名所需硬币数量。by cqzym1985
+7.使用硬幣可修改使用者名稱，首次修改免費。在 控制面板「系統設定」裡設定修改使用者名稱所需硬幣數量。by cqzym1985
 
-### 用户管理
+### 使用者管理
 
-1.查看所有用户，可按登陆时间等筛选用户。by cqzym1985
+1.查看所有使用者，可按登入時間等篩選使用者。by cqzym1985
 
 2.可封禁和解禁用户、修改用户的用户名、修改用户的资料等。by cqzym1985
 

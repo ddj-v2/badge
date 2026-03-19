@@ -11,7 +11,7 @@
     </div>
     <div class="section__body no-padding">
         {% if not ddocs.length %}
-        {{ nothing.render('对不起，没有徽章。') }}
+        {{ nothing.render('對不起，沒有徽章。') }}
         {% else %}
         <div class="section__table-container">
             <table class="data-table section__table-heade">
@@ -24,8 +24,8 @@
                 <thead>
                     <tr>
                         <th>{{ _('徽章ID') }}</th>
-                        <th>{{ _('徽章标题') }}</th>
-                        <th>{{ _('徽章预览') }}</th>
+                        <th>{{ _('徽章標題') }}</th>
+                        <th>{{ _('徽章預覽') }}</th>
                         <th>{{ _('Action') }}</th>
                     </tr>
                 </thead>
@@ -38,7 +38,7 @@
                             <a href="{{ url('badge_detail', id=ddoc._id) }}" class="user-profile-badge v-center" style="background-color:{{ ddoc.backgroundColor }};color:{{ ddoc.fontColor }};" data-tooltip="{{ ddoc.title }}">{{ ddoc.short }}</a>
                         </td>
                         <td>
-                            <a href="{{ url('badge_edit', id=ddoc._id) }}" class="typo-a contest-tag">{{ _('Edit') }}</a>
+                            <a href="{{ url('badge_edit', id=ddoc._id) }}" class="typo-a contest-tag">{{ _('編輯') }}</a>
                         </td>
                     </tr>
                     {%- endfor -%}

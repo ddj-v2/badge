@@ -5,30 +5,30 @@
         <h1 class="section__title">{{ _('badge_mybadge') }}</h1>
     </div>
     {% if not ddocs.length %}
-    {{ nothing.render('对不起，你没有徽章。') }}
+    {{ nothing.render('對不起，你沒有徽章。') }}
     {% else %}
     <div class="section__body">
         <blockquote class="note typo">
             <ul>
-                <li>{{ _('鼠标悬停至徽章可查看徽章标题，单击徽章可打开徽章介绍页。') }}</li>
-                <li>{{ _('对徽章存续等有任何问题的，请联系站点管理员。') }}</li>
+                <li>{{ _('滑鼠懸停至徽章可查看徽章標題，單擊徽章可打開徽章介紹頁。') }}</li>
+                <li>{{ _('對徽章存續等有任何問題的，請聯絡網站管理員。') }}</li>
             </ul>
         </blockquote>
         <div class="row">
             <div class="medium-9 columns">
                 <h3>
-                    {{ _('当前徽章：') }}
+                    {{ _('目前徽章：') }}
                     {% if udoc.badgeId %}
                     {{user.render_inline(udoc,modbadge=false,levelbadge=false)}}
                     {% else %}
-                    {{ _('您暂未启用任何徽章') }}
+                    {{ _('您暫未啟用任何徽章') }}
                     {% endif %}
                 </h3>
             </div>
             <div class="medium-3 columns" style="display: flex;">
                 {{ _('重置徽章：') }}
                 <form method="post">
-                    <button class="typo-a contest-tag" name="operation" value="reset" type="submit">{{ _('Reset') }}</button>
+                    <button class="typo-a contest-tag" name="operation" value="reset" type="submit">{{ _('重置') }}</button>
                 </form>
             </div>
         </div>
@@ -45,9 +45,9 @@
             <thead>
                 <tr>
                     <th>{{ _('徽章ID') }}</th>
-                    <th>{{ _('徽章标题') }}</th>
-                    <th>{{ _('徽章预览') }}</th>
-                    <th>{{ _('获取时间') }}</th>
+                    <th>{{ _('徽章標題') }}</th>
+                    <th>{{ _('徽章預覽') }}</th>
+                    <th>{{ _('取得時間') }}</th>
                     <th>{{ _('Actions') }}</th>
                 </tr>
             </thead>

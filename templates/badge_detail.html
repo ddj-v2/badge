@@ -15,21 +15,21 @@
             </div>
             <div class="section__footer" style="display:flex;justify-content: space-between;">
                 <h3>
-                    {{ _('徽章预览')}}：{{ user.render_inline(handler.user,badge=false)}}
+                    {{ _('徽章預覽')}}：{{ user.render_inline(handler.user,badge=false)}}
                     <span class="user-profile-badge v-center" style="background-color:{{ badge.backgroundColor }};color:{{ badge.fontColor }};" data-tooltip="{{ badge.title }}">{{ badge.short }}</span>
                 </h3>
-                <h3>{{_('创建于')}}：{{ datetimeSpan(badge.createAt, false, 'YYYY-MM-DD')|safe}}</h3>
+                <h3>{{_('建立於')}}：{{ datetimeSpan(badge.createAt, false, 'YYYY-MM-DD')|safe}}</h3>
             </div>
         </div>
     </div>
 </div>
 <div class="section">
     <div class="section__header">
-        <h1 class="section__title">{{ _('拥有徽章的用户') }}</h1>
+        <h1 class="section__title">{{ _('擁有徽章的使用者') }}</h1>
     </div>
     <div class="section__body no-padding">
         {% if not badge.users.length %}
-        {{ nothing.render('抱歉，目前没人拥有徽章。') }}
+        {{ nothing.render('抱歉，目前沒人擁有徽章。') }}
         {% else %}
         <table class="data-table">
             <colgroup>
