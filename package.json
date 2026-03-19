@@ -1,9 +1,9 @@
 {
-  "name": "badge",
+  "name": "@ddj-v2/badge",
   "version": "0.0.1",
-  "description": "Badge for QLUOJ",
+  "description": "Badge for HydroOJ",
   "main": "index.ts",
-  "author": "Godtokoo<admin@funfs.com>",
+  "author": "FDHS",
   "license": "MIT",
   "devDependencies": {
       "hydrooj": "^4.18.0"
