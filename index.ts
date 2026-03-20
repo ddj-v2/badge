@@ -203,18 +203,19 @@ class BadgeShopPublishHandler extends Handler {
 }
 
 export async function apply(ctx: Context) {
-    const shopBridge = getShopBridge();
-    if (shopBridge) {
-        shopBridge.registerGoodsPurchaseModel('badge_purchase', BadgePurchaseModel);
-        shopBridge.registerShopManageEntry({
-            key: 'badge_shop_publish',
-            title: '發佈徽章到商城',
-            href: '/badge/shop-publish',
-        });
-    } else {
-        (ctx as any).logger?.warn?.('shop bridge not found, badge shop integration disabled');
-    }
-
+    ctx.inject(['Shop'], (c) => {
+        const shopBridge = getShopBridge();
+        if (shopBridge) {
+            shopBridge.registerGoodsPurchaseModel('badge_purchase', BadgePurchaseModel);
+            shopBridge.registerShopManageEntry({
+                key: 'badge_shop_publish',
+                title: '發佈徽章到商城',
+                href: '/badge/shop-publish',
+            });
+        } else {
+            (ctx as any).logger?.warn?.('shop bridge not found, badge shop integration disabled');
+        }
+    });
     ctx.inject(['setting'], (c) => {
         c.setting.AccountSetting(
             SettingModel.Setting('setting_storage', 'badgeId', 0, 'number', 'badgeId', null, 3)
