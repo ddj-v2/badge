@@ -29,6 +29,11 @@
                                     {{ _('badge_manage') }}
                                 </a>
                             </li>
+                            <li class="menu__item" id="menu-item-badge_shop_publish">
+                                <a class="menu__link{% if page_name == 'badge_shop_publish' %} active{% endif %}" href="{{ url('badge_shop_publish') }}">
+                                    {{ _('badge_shop_publish') }}
+                                </a>
+                            </li>
                             {% endif %}
                         </ol>
                     </li>

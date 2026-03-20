@@ -1,6 +1,11 @@
 import { db, UserModel } from 'hydrooj';
 import { deleteUserCache } from 'hydrooj/src/model/user';
 
+interface ShopPurchaseItem {
+    objectId?: string;
+    data?: Record<string, unknown>;
+}
+
 const collbd = db.collection('badge');
 const collubd = db.collection('user.badge');
 
@@ -26,6 +31,7 @@ declare module 'hydrooj' {
     interface Model {
         userBadge: typeof UserBadgeModel;
         badge: typeof BadgeModel;
+        badge_purchase: typeof BadgePurchaseModel;
     }
     interface Collections {
         userBadge: UserBadge;
@@ -156,7 +162,31 @@ class BadgeModel {
     }
 }
 
+class BadgePurchaseModel {
+    static async purchase(uid: number, item: ShopPurchaseItem, _amount: number): Promise<boolean | { success: boolean; message: string }> {
+        const badgeIdRaw = item.data?.badgeId ?? item.objectId?.replace(/^badge:/, '');
+        const badgeId = Number(badgeIdRaw);
+        if (!Number.isInteger(badgeId) || badgeId <= 0) {
+            return { success: false, message: '徽章 ID 無效' };
+        }
+
+        const badge = await BadgeModel.get(badgeId);
+        if (!badge) {
+            return { success: false, message: '徽章不存在' };
+        }
+
+        const owned = await UserBadgeModel.coll.findOne({ owner: uid, badgeId });
+        if (owned) {
+            return { success: false, message: `你已擁有徽章「${badge.title}」` };
+        }
+
+        await UserBadgeModel.add(uid, badgeId);
+        return true;
+    }
+}
+
 global.Hydro.model.userBadge = UserBadgeModel;
 global.Hydro.model.badge = BadgeModel;
+global.Hydro.model.badge_purchase = BadgePurchaseModel;
 
-export { UserBadgeModel, BadgeModel, UserBadge, Badge };
+export { UserBadgeModel, BadgeModel, BadgePurchaseModel, UserBadge, Badge };

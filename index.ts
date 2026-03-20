@@ -1,7 +1,38 @@
 import {
-    Context, UserModel, SettingModel, Handler, NotFoundError, param, PRIV, Types, paginate, query
+    Context, UserModel, SettingModel, Handler, NotFoundError, ValidationError, param, PRIV, Types, query
 } from 'hydrooj';
-import { UserBadgeModel, BadgeModel } from './model';
+import { UserBadgeModel, BadgeModel, BadgePurchaseModel } from './model';
+
+interface ShopBridge {
+    goodsModel: {
+        add: (
+            name: string,
+            price: number,
+            num: number,
+            objectId?: string,
+            goodsId?: number,
+            purchaseModelId?: string,
+            data?: Record<string, unknown>,
+            description?: string,
+        ) => Promise<number | string>;
+        getByObjectId: (objectId: string) => Promise<any>;
+    };
+    registerGoodsPurchaseModel: (
+        modelId: string,
+        model: {
+            purchase: (
+                uid: number,
+                item: any,
+                amount: number,
+            ) => Promise<boolean | { success: boolean; message?: string }> | (boolean | { success: boolean; message?: string });
+        }
+    ) => void;
+    registerShopManageEntry: (entry: { key: string; title: string; href: string }) => void;
+}
+
+function getShopBridge(): ShopBridge | null {
+    return (global.Hydro as any)?.shopBridge || null;
+}
 
 class UserBadgeManageHandler extends Handler {
     @query('page', Types.PositiveInt, true)
@@ -126,7 +157,62 @@ class BadgeShowHandler extends Handler {
     }
 }
 
+class BadgeShopPublishHandler extends Handler {
+    async get() {
+        const badges = await BadgeModel.coll.find({}).sort({ _id: 1 }).toArray();
+        this.response.template = 'badge_shop_publish.html';
+        this.response.body = {
+            badges,
+            page_name: 'badge_shop_publish',
+        };
+    }
+
+    @param('badgeId', Types.PositiveInt)
+    @param('price', Types.UnsignedInt)
+    async post(domainId: string, badgeId: number, price: number) {
+        const shopBridge = getShopBridge();
+        if (!shopBridge) throw new ValidationError('shop', '', '尚未啟用 shop 外掛，無法發佈到商城');
+
+        const badge = await BadgeModel.get(badgeId);
+        if (!badge) throw new NotFoundError(`徽章 ${badgeId} 不存在！`);
+
+        const objectId = `badge:${badgeId}`;
+        const existed = await shopBridge.goodsModel.getByObjectId(objectId);
+        if (existed) throw new ValidationError('badgeId', '', `徽章 ${badgeId} 已經在商城中`);
+
+        const goodsId = await shopBridge.goodsModel.add(
+            badge.title,
+            price,
+            -1,
+            objectId,
+            undefined,
+            'badge_purchase',
+            { badgeId },
+            badge.content
+        );
+
+        this.response.template = 'badge_shop_publish.html';
+        this.response.body = {
+            badges: await BadgeModel.coll.find({}).sort({ _id: 1 }).toArray(),
+            page_name: 'badge_shop_publish',
+            message: `徽章已發佈到商城，商品 ID: ${goodsId}`,
+        };
+    }
+}
+
 export async function apply(ctx: Context) {
+    const shopBridge = getShopBridge();
+    if (shopBridge) {
+        shopBridge.registerGoodsPurchaseModel('badge_purchase', BadgePurchaseModel);
+        shopBridge.registerShopManageEntry({
+            key: 'badge_shop_publish',
+            title: '發佈徽章到商城',
+            href: '/badge/shop-publish',
+        });
+    } else {
+        (ctx as any).logger?.warn?.('shop bridge not found, badge shop integration disabled');
+    }
+
     ctx.inject(['setting'], (c) => {
         c.setting.AccountSetting(
             SettingModel.Setting('setting_storage', 'badgeId', 0, 'number', 'badgeId', null, 3)
@@ -154,8 +240,9 @@ export async function apply(ctx: Context) {
     ctx.Route('badge_manage', '/badge/manage', BadgeManageHandler, PRIV.PRIV_SET_PERM);
     ctx.Route('badge_add', '/badge/add', BadgeAddHandler, PRIV.PRIV_SET_PERM);
     ctx.Route('badge_mybadge', '/badge/mybadge', UserBadgeManageHandler, PRIV.PRIV_USER_PROFILE);
-    ctx.Route('badge_detail', '/badge/:id', BadgeDetailHandler);
+    ctx.Route('badge_shop_publish', '/badge/shop-publish', BadgeShopPublishHandler, PRIV.PRIV_SET_PERM);
     ctx.Route('badge_edit', '/badge/:id/edit', BadgeEditHandler, PRIV.PRIV_SET_PERM);
+    ctx.Route('badge_detail', '/badge/:id', BadgeDetailHandler);
     ctx.injectUI('UserDropdown', 'badge_mybadge', { icon: 'crown', displayName: '我的徽章' });
     ctx.i18n.load('zh', {
         badge_show: '展示徽章',
@@ -164,5 +251,6 @@ export async function apply(ctx: Context) {
         badge_mybadge: '我的徽章',
         badge_detail: '徽章详情',
         badge_edit: '编辑徽章',
+        badge_shop_publish: '發佈徽章到商城',
     });
 }
