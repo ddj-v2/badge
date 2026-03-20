@@ -14,6 +14,7 @@ interface ShopBridge {
             purchaseModelId?: string,
             data?: Record<string, unknown>,
             description?: string,
+            redirectUrl?: string,
         ) => Promise<number | string>;
         getByObjectId: (objectId: string) => Promise<any>;
     };
@@ -188,7 +189,8 @@ class BadgeShopPublishHandler extends Handler {
             undefined,
             'badge_purchase',
             { badgeId },
-            badge.content
+            badge.content,
+            '/badge/mybadge'
         );
 
         this.response.template = 'badge_shop_publish.html';
