@@ -92,7 +92,7 @@ class BadgeModel {
         return await BadgeModel.coll.find({});
     }
 
-    static async add(short: string, title: string, backgroundColor: string, fontColor: string, content: string, users: [number], badgeId?: number): Promise<number> {
+    static async add(short: string, title: string, backgroundColor: string, fontColor: string, content: string, users: number[], badgeId?: number): Promise<number> {
         if (typeof badgeId !== 'number') {
             const [badge] = await BadgeModel.coll.find({}).sort({ _id: -1 }).limit(1).toArray();
             badgeId = Math.max((badge?._id || 0) + 1, 1);
@@ -119,7 +119,7 @@ class BadgeModel {
         return await BadgeModel.coll.findOne({ _id: badgeId });
     }
 
-    static async edit(badgeId: number, short: string, title: string, backgroundColor: string, fontColor: string, content: string, users: [number], users_old: [number]): Promise<number> {
+    static async edit(badgeId: number, short: string, title: string, backgroundColor: string, fontColor: string, content: string, users: number[], users_old: number[]): Promise<number> {
         const result = await BadgeModel.coll.updateOne({ _id: badgeId }, { $set: { short, title, backgroundColor, fontColor, content, users } });
         if (users_old) {
             for (const userId of users_old) {
@@ -166,6 +166,15 @@ class BadgePurchaseModel {
     static async purchase(uid: number, item: ShopPurchaseItem, _amount: number): Promise<boolean | { success: boolean; message: string }> {
         const badgeIdRaw = item.data?.badgeId ?? item.objectId?.replace(/^badge:/, '');
         const badgeId = Number(badgeIdRaw);
+
+        if(_amount <= 0) {
+            return { success: false, message: '購買數量無效' };
+        }
+
+        if(_amount > 1) {
+            return { success: false, message: '一次只能購買一個徽章' };
+        }
+
         if (!Number.isInteger(badgeId) || badgeId <= 0) {
             return { success: false, message: '徽章 ID 無效' };
         }
@@ -176,11 +185,15 @@ class BadgePurchaseModel {
         }
 
         const owned = await UserBadgeModel.coll.findOne({ owner: uid, badgeId });
-        if (owned) {
+        if (owned || (badge.users && badge.users.includes(uid))) {
             return { success: false, message: `你已擁有徽章「${badge.title}」` };
         }
-
         await UserBadgeModel.add(uid, badgeId);
+        try {
+            await BadgeModel.coll.updateOne({ _id: badgeId }, { $addToSet: { users: uid } });
+        } catch (e) {
+            await BadgeModel.coll.updateOne({ _id: badgeId }, { $set: { users: [uid] } });
+        }
         return true;
     }
 }
