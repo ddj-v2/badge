@@ -28,7 +28,7 @@
             <div class="medium-3 columns" style="display: flex;">
                 {{ _('重置徽章：') }}
                 <form method="post">
-                    <button class="typo-a contest-tag" name="operation" value="reset" type="submit">{{ _('重置') }}</button>
+                    <button class="typo-a contest-tag" name="operation" value="reset" type="submit" onclick="return confirm('{{ _('確定要重置徽章嗎？') }}')">{{ _('重置') }}</button>
                 </form>
             </div>
         </div>
@@ -64,6 +64,10 @@
                         <form method="post">
                             <input type="hidden" name="badgeId" value="{{ ddoc.badgeId }}">
                             <button class="typo-a contest-tag" name="operation" value="enable" type="submit">{{ _('啟用') }}</button>
+                        </form>
+                        <form method="post">
+                            <input type="hidden" name="badgeId" value="{{ ddoc.badgeId }}">
+                            <button class="typo-a contest-tag" name="operation" value="delete" type="submit" onclick="return confirm('{{ _('確定要刪除徽章嗎？') }}')">{{ _('刪除') }}</button>
                         </form>
                     </td>
                 </tr>
