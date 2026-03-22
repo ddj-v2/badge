@@ -50,13 +50,7 @@ class UserBadgeManageHandler extends Handler {
         this.response.template = 'badge_mybadge.html';
         this.response.body = { ddocs, dpcount, page, udoc }
     }
-
-    @param('badgeId', Types.PositiveInt)
-    async postDelete(domainId: string, badgeId: number) {
-        await UserBadgeModel.del(this.user._id, badgeId);
-        this.response.redirect = this.url('badge_mybadge');
-    }
-
+    
     @param('badgeId', Types.PositiveInt)
     async postEnable(domainId: string, badgeId: number) {
         await UserBadgeModel.sel(this.user._id, badgeId);

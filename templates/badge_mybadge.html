@@ -65,10 +65,6 @@
                             <input type="hidden" name="badgeId" value="{{ ddoc.badgeId }}">
                             <button class="typo-a contest-tag" name="operation" value="enable" type="submit">{{ _('啟用') }}</button>
                         </form>
-                        <form method="post">
-                            <input type="hidden" name="badgeId" value="{{ ddoc.badgeId }}">
-                            <button class="typo-a contest-tag" name="operation" value="delete" type="submit" onclick="return confirm('{{ _('確定要刪除徽章嗎？') }}')">{{ _('刪除') }}</button>
-                        </form>
                     </td>
                 </tr>
                 {%- endfor -%}
