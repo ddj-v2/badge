@@ -14,10 +14,12 @@ interface ShopBridge {
             purchaseModelId?: string,
             data?: Record<string, unknown>,
             description?: string,
+            descriptionFormat?: 'markdown' | 'html',
             redirectUrl?: string,
         ) => Promise<number | string>;
         getByObjectId: (objectId: string) => Promise<any>;
     };
+    sanitizeHtml: (html: string) => string;
     registerGoodsPurchaseModel: (
         modelId: string,
         model: {
@@ -33,6 +35,15 @@ interface ShopBridge {
 
 function getShopBridge(): ShopBridge | null {
     return (global.Hydro as any)?.shopBridge || null;
+}
+
+function escapeHtml(input: string) {
+    return input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 class UserBadgeManageHandler extends Handler {
@@ -182,6 +193,19 @@ class BadgeShopPublishHandler extends Handler {
         const existed = await shopBridge.goodsModel.getByObjectId(objectId);
         if (existed) throw new ValidationError('badgeId', '', `徽章 ${badgeId} 已經在商城中`);
 
+                const badgeTitle = escapeHtml(badge.title || '');
+                const badgeShort = escapeHtml(badge.short || '');
+                const badgeContent = escapeHtml(badge.content || '');
+                const badgeBackground = escapeHtml(badge.backgroundColor || '#666');
+                const badgeFont = escapeHtml(badge.fontColor || '#fff');
+                const descriptionHtml = `
+<div class="typo">
+    <p>
+        <span class="user-profile-badge v-center" style="background-color:${badgeBackground};color:${badgeFont};" title="${badgeTitle}">${badgeShort}</span>
+    </p>
+</div>`.trim();
+// <strong style="margin-left:8px;">${badgeTitle}</strong>
+// <p style="margin-top:8px;white-space:pre-wrap;">${badgeContent}</p>
         const goodsId = await shopBridge.goodsModel.add(
             badge.title,
             price,
@@ -190,7 +214,8 @@ class BadgeShopPublishHandler extends Handler {
             undefined,
             'badge_purchase',
             { badgeId },
-            badge.content,
+            descriptionHtml,
+            'html',
             '/badge/mybadge'
         );
 
