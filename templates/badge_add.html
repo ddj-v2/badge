@@ -41,6 +41,12 @@
                         row:false
                     }) }}
                     </div>
+                    <div class="section" style="margin-top:12px;">
+                        <h2 class="section__title" style="margin-top: 0.5rem; margin-left: 0.4rem">{{ _('徽章預覽') }}</h2>
+                        <p style="margin: 0.5rem 0 0.5rem 0.5rem">
+                            <span id="badge-preview-chip" class="user-profile-badge v-center" style="background-color:#666;color:#fff;" title="">BADGE</span>
+                        </p>
+                    </div>
                     {{ form.form_text({
                         columns:12,
                         label:'徽章分配',
@@ -67,4 +73,43 @@
         {% include 'components/md_hint.html' %}
     </div>
 </div>
+<script>
+(() => {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    const titleInput = form.querySelector('[name="title"]');
+    const shortInput = form.querySelector('[name="short"]');
+    const bgInput = form.querySelector('[name="backgroundColor"]');
+    const fontInput = form.querySelector('[name="fontColor"]');
+    const chip = document.getElementById('badge-preview-chip');
+
+    if (!titleInput || !shortInput || !bgInput || !fontInput || !chip) return;
+
+    const normalizeColor = (raw, fallback) => {
+        const color = String(raw || '').trim();
+        return /^#(?:[\da-fA-F]{3}|[\da-fA-F]{6}|[\da-fA-F]{8})$/.test(color) ? color : fallback;
+    };
+
+    const render = () => {
+        const titleText = String(titleInput.value || '').trim();
+        const shortText = String(shortInput.value || '').trim();
+        const bgColor = normalizeColor(bgInput.value, '#666');
+        const fontColor = normalizeColor(fontInput.value, '#fff');
+
+        chip.textContent = shortText || 'BADGE';
+        chip.title = titleText;
+        chip.style.backgroundColor = bgColor;
+        chip.style.color = fontColor;
+    };
+
+    ['input', 'change'].forEach((eventName) => {
+        [titleInput, shortInput, bgInput, fontInput].forEach((el) => {
+            el.addEventListener(eventName, render);
+        });
+    });
+
+    render();
+})();
+</script>
 {% endblock %}
